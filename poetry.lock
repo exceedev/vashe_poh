@@ -174,6 +174,25 @@ srv = ["dnspython (>=1.16.0,<3.0.0)"]
 zstd = ["zstandard"]
 
 [[package]]
+name = "python-multipart"
+version = "0.0.5"
+description = "A streaming multipart parser for Python"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+six = ">=1.4.0"
+
+[[package]]
+name = "six"
+version = "1.16.0"
+description = "Python 2 and 3 compatibility utilities"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*"
+
+[[package]]
 name = "sniffio"
 version = "1.2.0"
 description = "Sniff out which async library your code is running under"
@@ -254,7 +273,7 @@ standard = ["websockets (>=10.0)", "httptools (>=0.4.0)", "watchgod (>=0.6)", "p
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "701c673515850b33299b5c91329f40762133208a071678231287e856d7d399d8"
+content-hash = "f661533937336c74d2a0392c9f5c13bf7e2484bd661464f0d3572183500ac403"
 
 [metadata.files]
 aiosqlite = [
@@ -475,6 +494,13 @@ pymongo = [
     {file = "pymongo-4.1.0-cp39-cp39-win32.whl", hash = "sha256:2cb0148f197891cce964b53192225eee7ffac61ae39311c3447592eee4474b98"},
     {file = "pymongo-4.1.0-cp39-cp39-win_amd64.whl", hash = "sha256:52f636c67f8aab3b9736e4f2e1f366cb96f28f6a00baebe0885a919830866130"},
     {file = "pymongo-4.1.0.tar.gz", hash = "sha256:dbba77bc0b706c7ee496fc75a6c6ed406d85f6091d5fec488a8944c3828e6462"},
+]
+python-multipart = [
+    {file = "python-multipart-0.0.5.tar.gz", hash = "sha256:f7bb5f611fc600d15fa47b3974c8aa16e93724513b49b5f95c81e6624c83fa43"},
+]
+six = [
+    {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},
+    {file = "six-1.16.0.tar.gz", hash = "sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926"},
 ]
 sniffio = [
     {file = "sniffio-1.2.0-py3-none-any.whl", hash = "sha256:471b71698eac1c2112a40ce2752bb2f4a4814c22a54a3eed3676bc0f5ca9f663"},
