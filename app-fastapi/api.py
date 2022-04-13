@@ -4,9 +4,11 @@ from fastapi import APIRouter, UploadFile, File
 from db import image_collection, image_db
 from schemas import Image
 from db import connect
-
+import gridfs
 
 image_router = APIRouter()
+
+record_image = gridfs.GridFS(image_db)
 
 
 @image_router.post('/img/{file_name}')
@@ -24,9 +26,13 @@ async def get_images():
 
 @image_router.post('/upload')
 async def upload_file(file: UploadFile = File(...)):
-    with open(file.filename, 'wb') as buffer:
-        shutil.copyfileobj(file.file, buffer)
-    record_dict = {
-        'file': buffer
-    }
-    image_db.image_collection.insert_one(record_dict)
+    record_image.put(file.file, filename=file.filename)
+
+
+@image_router.get('/download')
+async def download_file(name: str):
+    download_location = f'./{name}'
+    with open(download_location, 'wb') as output:
+        data = record_image.find_one({'filename': name})
+        shutil.copyfileobj(data, output)
+
