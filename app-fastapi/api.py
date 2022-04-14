@@ -7,16 +7,13 @@ from starlette.responses import StreamingResponse
 
 from db import image_db
 from tasks import test
-from dotenv import load_dotenv
 
-load_dotenv('.env')
 
 image_router = APIRouter(
     prefix='/images'
 )
 
 database = gridfs.GridFS(image_db)
-DOWNLOAD_LOCATION = os.getenv('DOWNLOAD_LOCATION')
 
 
 @image_router.get('/')
