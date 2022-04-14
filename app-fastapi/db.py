@@ -8,4 +8,3 @@ connect = MongoClient(
 )
 
 image_db = connect['image-database']
-image_collection = image_db['images']

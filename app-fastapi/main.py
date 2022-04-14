@@ -1,6 +1,8 @@
 from fastapi import FastAPI
-from api import image_router
 from fastapi.staticfiles import StaticFiles
+
+from api import image_router
+
 
 app = FastAPI()
 

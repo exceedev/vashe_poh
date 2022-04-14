@@ -8,6 +8,8 @@ load_dotenv('.env')
 RABBIT_BROKER = os.getenv('RABBIT_BROKER')
 RABBIT_BACKEND = os.getenv('RABBIT_BACKEND')
 
-app = Celery('app-fastapi',
-             broker=RABBIT_BROKER,
-             backend=RABBIT_BACKEND)
+app = Celery(
+    'app-fastapi',
+    broker=RABBIT_BROKER,
+    backend=RABBIT_BACKEND
+)
