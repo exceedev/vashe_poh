@@ -30,27 +30,27 @@ request_json = {
 }
 
 
-@app.route("/")
+@app.route('/')
 def index():
     return "<h1>Hello matherFucka!</h1>"
 
 
-@app.route("/auth", methods=['GET'])
+@app.route('/auth', methods=['GET'])
 def auth_get():
     return jsonify(request_json)
 
 
-@app.route("/auth", methods=['POST'])
+@app.route('/auth', methods=['POST'])
 def auth_post():
     req = request.json
     request_json['objects'].append(req)
     return jsonify(request_json)
 
 
-@app.route("/info")
+@app.route('/info')
 def info():
-    return render_template("info.html")
+    return render_template('info.html')
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run(debug=True)
