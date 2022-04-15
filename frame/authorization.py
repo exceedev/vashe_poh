@@ -35,11 +35,6 @@ def index():
     return "<h1>Hello matherFucka!</h1>"
 
 
-@app.route("/<path:anytext>")
-def dublecator(anytext):
-    return f"<h1>Ты вводишь какую то дичь. Где ты блеать видел такой сука путь? {anytext}. Я ТЕБЯ СПРАШИВАЮ! ГДЕ??!?!?!?</h1>"
-
-
 @app.route("/auth", methods=['GET'])
 def auth_get():
     return jsonify(request_json)
@@ -49,14 +44,12 @@ def auth_get():
 def auth_post():
     req = request.json
     request_json['objects'].append(req)
-
-    print(req)
     return jsonify(request_json)
 
 
 @app.route("/info")
 def info():
-    return render_template('info.html')
+    return render_template("info.html")
 
 
 if __name__ == "__main__":
