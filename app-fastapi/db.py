@@ -3,7 +3,6 @@ import os
 from pymongo import MongoClient
 
 MONGO_HOST = os.getenv('MONGO_HOST')
-# MONGO_PORT = os.environ.get('MONGO_PORT')
 
 connect = MongoClient(
     host=MONGO_HOST,
