@@ -2,6 +2,7 @@
 repository for practice in microservice architecture
 
 env:
+
 RABBIT_BROKER=pyamqp://myuser:mypassword@rabbitmq:5672/vhost
 RABBIT_BACKEND=rpc://
 
