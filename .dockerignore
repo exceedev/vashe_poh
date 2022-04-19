@@ -3,4 +3,3 @@ LICENSE
 poetry.lock
 README.md
 .idea/
-db.sqlite3

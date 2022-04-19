@@ -2,19 +2,23 @@ version: '3.8'
 
 services:
   mongodb:
-    image: mongo
+    image: mongo:4.2.20-rc0
     container_name: mongo
     restart: always
     ports:
       - '27017:27017'
+    networks:
+      - backend
   rabbitmq:
-    image: rabbitmq
+    image: rabbitmq:3.10.0-rc.1
     container_name: rabbitmq
     restart: always
     ports:
       - '5672:5672'
     env_file:
       - .env
+    networks:
+      - backend
   fastapi-app:
     build: ./app-fastapi
     container_name: fastapi-app
@@ -27,6 +31,8 @@ services:
     depends_on:
       - mongodb
       - rabbitmq
+    networks:
+      - backend
   celery:
     build:
       context: ./app-fastapi
@@ -39,7 +45,8 @@ services:
       - rabbitmq
     depends_on:
       - fastapi-app
-      - rabbitmq
+    networks:
+      - backend
   flower:
     build: ./app-fastapi
     container_name: flower
@@ -54,6 +61,8 @@ services:
       CELERY_RESULT_BACKEND: ${RABBIT_BACKEND}
     depends_on:
       - celery
+    networks:
+      - backend
   nginx:
     image: nginx:1.21.3-alpine
     container_name: nginx
@@ -65,6 +74,13 @@ services:
       - media_value:/var/html/media/
     depends_on:
       - fastapi-app
+    networks:
+      - backend
+
 volumes:
   static_value:
   media_value:
+
+networks:
+  backend:
+    driver: bridge
