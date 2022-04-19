@@ -28,6 +28,6 @@ async def get_images():
 async def upload_file(file: UploadFile = File(...)):
     download_location = f'media/{file.filename}'
     with open(download_location, 'wb') as output:
-        data = database.find_one({'filename': file.filename})
-        shutil.copyfileobj(data, output)
+        # data = database.find_one({'filename': file.filename})
+        shutil.copyfileobj(file.file, output)
     database.put(file.file, filename=file.filename)
