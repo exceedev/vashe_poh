@@ -1,8 +1,11 @@
 from crypt import methods
 from flask import Flask, render_template, redirect, request, jsonify
 
+from .config import Config
+
 
 app = Flask(__name__)
+app.config.from_object(Config)
 
 client = app.test_client()
 
@@ -53,4 +56,4 @@ def info():
 
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run()
