@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "frame"
+name = "flask_os"
 version = "0.1.0"
 description = ""
-authors = ["amiktadov"]
+authors = ["amiktadov <amiktadov.exceedteam@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
