@@ -1,9 +1,9 @@
+import bson
 from fastapi import APIRouter, UploadFile, File
 
 from db import collection
 from services import save_image
 from schemas import UploadImage
-
 
 image_router = APIRouter(
     prefix='/images'
@@ -14,5 +14,11 @@ image_router = APIRouter(
 async def upload_file(file: UploadFile = File(...)):
     await save_image(file)
     document = {'filename': file.filename}
-    await collection.insert_one(document)
+    object_ = await collection.insert_one(document)
+    document |= {"object_id": object_.inserted_id}
     return document
+
+
+@image_router.get('/{id}/')
+async def get_image():
+    pass
