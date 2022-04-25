@@ -8,7 +8,6 @@ authors = ["AntonGrebenyukov <agrebenyukov.exceedteam@gmail.com>"]
 python = "^3.10"
 fastapi = "^0.75.1"
 ormar = "^0.11.0"
-pymongo = "^4.1.0"
 uvicorn = "^0.17.6"
 python-multipart = "^0.0.5"
 celery = "^5.2.6"
@@ -16,6 +15,8 @@ rabbitmq = "^0.2.0"
 python-dotenv = "^0.20.0"
 flower = "^1.0.0"
 flake8 = "^4.0.1"
+motor = "2.5.1"
+aiofiles = "^0.8.0"
 
 [tool.poetry.dev-dependencies]
 
