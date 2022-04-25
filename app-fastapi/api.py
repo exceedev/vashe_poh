@@ -16,8 +16,3 @@ async def upload_file(file: UploadFile = File(...)):
     object_ = await collection.insert_one(document)
     document |= {"object_id": object_.inserted_id}
     return document
-
-
-@image_router.get('/{id}/')
-async def get_image():
-    pass
