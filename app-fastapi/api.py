@@ -1,4 +1,3 @@
-import bson
 from fastapi import APIRouter, UploadFile, File
 
 from db import collection
