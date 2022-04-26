@@ -4,10 +4,30 @@ from flask import render_template, request, jsonify
 
 @app.route('/')
 def index():
-    think = 'start'
-    return render_template('index.html', title=think)
+    response = {
+        'status': 200,
+        'title': 'INDEX'
+    }
+    return jsonify(response)
 
 
-@app.route('/auth', methods=['GET'])
-def auth_get():
-    return 'hi'
+@app.route('/auths', methods=['GET', 'POST'])
+def auth():
+    response = {
+        'status': 200,
+        'title': 'AUTH TEST',
+        'method': request.method,
+        'your json': request.json
+    }
+    return jsonify(response)
+
+
+@app.route('/user/<int:user_id>', methods=['GET', 'POST'])
+def auth():
+    response = {
+        'status': 200,
+        'title': 'AUTH TEST',
+        'method': request.method,
+        'your json': request.json
+    }
+    return jsonify(response)

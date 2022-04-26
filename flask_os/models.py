@@ -6,21 +6,24 @@ from datetime import datetime
 from app import db
 
 
-def slugify(s):
-    pass
-
-
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    datetime = db.Column(db.DateTime, default=datetime.now())
-    username = db.Column(db.String(140), unique=True)
-    password = db.Column(db.String(200))
-    email = db.Column(db.String(86))
+    datetime = db.Column(db.DateTime, default=datetime.utcnow)
+    username = db.Column(db.String(50), unique=True)
+    password = db.Column(db.String(500), nullable=True)
+    email = db.Column(db.String(86), unique=True)
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.generate_slug()
+    def __repr__(self) -> str:
+        return f'<User: id:{self.id}, username:{self.username}>'
 
-    def generate_slug(self):
-        if self.title:
-            self.slug = slugify(self.title)
+
+class Profile(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.Integer, db.ForeignKey('user.id'),
+                     nullable=False)
+    name = db.Column(db.String(50), nullable=True)
+    age = db.Column(db.Integer)
+    city = db.Column(db.String(120))
+
+    def __repr__(self) -> str:
+        return f'<Profile: id:{self.name}>'
