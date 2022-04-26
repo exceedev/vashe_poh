@@ -1,74 +1,59 @@
-from werkzeug.security import generate_password_hash, check_password_hash
+from models import *
 from flask import Flask, jsonify, request
-from flask_sqlalchemy import SQLAlchemy
+import sqlalchemy as db
+from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
+from config import Config
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+app.config.from_object(Config)
+
+client = app.test_client()
+
+engine = create_engine('sqlite:///db.sqlite')
+
+session = scoped_session(sessionmaker(
+    autocommit=False, autoflush=False, bind=engine))
+
+Base = declarative_base()
+Base.query = session.query_property()
+
+jwt = JWTManager(app)
 
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(500), nullable=False)
-
-    def __repr__(self):
-        return '<User %r>' % self.username
+Base.metadata.create_all(bind=engine)
 
 
-class JWT(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'),
-                        nullable=False)
-    user = db.relationship('User',
-                           backref=db.backref('jwt', lazy=True))
-    token = db.Column(db.String(400), nullable=False)
-
-    def __repr__(self):
-        return '<User %r>' % self.username.username
+@app.route('/test/<int:cound>', methods=['GET'])
+@jwt_required
+def test(count):
+    return jsonify({'count': count})
 
 
-db.create_all()
+@app.route('/register', methods=['POST'])
+def register():
+    params = request.json
+    user = User(**params)
+    session.add(user)
+    session.commit()
+    token = user.get_token()
+    return {'access_token': token}
 
 
-@app.route('/register', methods=['POST', ])
-def users():
-    if request.method == 'POST':
-        try:
-            password = request.json['password']
-            hash = generate_password_hash(password)
-
-            user = User(
-                username=request.json['username'],
-                email=request.json['email'],
-                password=hash
-            )
-
-            db.session.add(user)
-            db.session.flush()
-
-            jwt = JWT(
-                token='awdawdawdawd123123123',
-                user_id=user.id
-            )
-
-            db.session.add(jwt)
-            db.session.commit()
-
-            return jsonify({'status': 200, 'hash': hash, 'password': password})
-        except:
-            db.session.rollback()
-            return jsonify({'status': 300})
+@app.route('/login', methods=['POST'])
+def login():
+    params = request.json
+    user = User.authenticate(**params)
+    token = user.get_token()
+    return {'access_token': token}
 
 
-@app.route('/user/<int:user_id>', methods=['GET', 'POST'])
-def user(user_id):
-    if request.method == 'GET':
-        return jsonify({'response': 'GET', 'user_id': user_id})
-    elif request.method == 'POST':
-        return jsonify({'response': 'POST', 'user_id': user_id})
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    session.remove()
 
 
-app.run()
+if __name__ == '__main__':
+    app.run()
