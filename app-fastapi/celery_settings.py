@@ -3,6 +3,7 @@ import os
 from celery import Celery
 from dotenv import load_dotenv
 
+
 load_dotenv('../.env')
 
 RABBIT_BROKER = os.getenv('RABBIT_BROKER')
