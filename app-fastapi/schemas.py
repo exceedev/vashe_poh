@@ -15,7 +15,6 @@ class PydanticObjectId(str):
 
 
 class GetImage(BaseModel):
-
     def __init__(self, **data):
         if '_id' in data.keys():
             data['id'] = data.pop('_id')
