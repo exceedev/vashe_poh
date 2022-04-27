@@ -52,5 +52,5 @@ async def delete_image(image_id: str):
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail='Image not found'
         )
-    await collection.delete_one({'_id': ObjectId(image_id)})
+    await collection.delete_one(find_image)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
