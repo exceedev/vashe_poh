@@ -1,16 +1,18 @@
-from app import db, session, Base
-from sqlalchemy.orm import relationship
-from flask_jwt_extended import create_access_token
 from datetime import timedelta
+
+from sqlalchemy import Column, Integer, String
+from flask_jwt_extended import create_access_token
+
+from .db import session, Base
 from passlib.hash import bcrypt
 
 
 class User(Base):
     __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(250), nullable=False)
-    email = db.Column(db.String(250), nullable=False, unique=True)
-    password = db.Column(db.String(100), nullable=False)
+    id = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
+    email = Column(String(250), nullable=False, unique=True)
+    password = Column(String(100), nullable=False)
 
     def __init__(self, **kwargs):
         self.name = kwargs.get('name')

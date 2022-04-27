@@ -1,33 +1,31 @@
-from app import app
-from flask import render_template, request, jsonify
+from flask import Blueprint, jsonify, request
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
+from .models import *
 
 
-@app.route('/')
-def index():
-    response = {
-        'status': 200,
-        'title': 'INDEX'
-    }
-    return jsonify(response)
+users_blueprint = Blueprint('users', __name__)
 
 
-@app.route('/auths', methods=['GET', 'POST'])
-def auth():
-    response = {
-        'status': 200,
-        'title': 'AUTH TEST',
-        'method': request.method,
-        'your json': request.json
-    }
-    return jsonify(response)
+@users_blueprint.route('/test', methods=['GET', 'POST'])
+@jwt_required()
+def test():
+    return jsonify({'count': 'count'})
 
 
-@app.route('/user/<int:user_id>', methods=['GET', 'POST'])
-def auth():
-    response = {
-        'status': 200,
-        'title': 'AUTH TEST',
-        'method': request.method,
-        'your json': request.json
-    }
-    return jsonify(response)
+@users_blueprint.route('/register', methods=['POST'])
+def register():
+    params = request.json
+    user = User(**params)
+    session.add(user)
+    session.commit()
+    token = user.get_token()
+    return {'access_token': token}
+
+
+@users_blueprint.route('/login', methods=['POST'])
+def login():
+    params = request.json
+    user = User.authenticate(**params)
+    token = user.get_token()
+    return {'access_token': token}
