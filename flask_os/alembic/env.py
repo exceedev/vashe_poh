@@ -10,6 +10,7 @@ import sys
 
 from db import engine, Base
 from models import *
+from config import Config
 
 current_path = os.path.dirname(os.path.abspath(__file__))
 ROOT_PATH = os.path.join(current_path, '..')
@@ -36,8 +37,8 @@ target_metadata = Base.metadata
 
 
 def run_migrations_offline():
-    url = config.get_main_option("sqlalchemy.url")
-    
+    url = Config.DB_CONN
+
     context.configure(
         url=url,
         target_metadata=target_metadata,
