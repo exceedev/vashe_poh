@@ -1,10 +1,10 @@
-from datetime import timedelta
-
 from sqlalchemy import Column, Integer, String
 from flask_jwt_extended import create_access_token
+from passlib.hash import bcrypt
+
+from datetime import timedelta
 
 from .db import session, Base
-from passlib.hash import bcrypt
 
 
 class User(Base):
