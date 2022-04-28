@@ -1,10 +1,9 @@
-from dotenv import load_dotenv
-
 import os
+
+from dotenv import load_dotenv
 
 
 load_dotenv()
-
 
 POSTGRES_DB = os.getenv('POSTGRES_DB')
 POSTGRES_USER = os.getenv('POSTGRES_USER')
