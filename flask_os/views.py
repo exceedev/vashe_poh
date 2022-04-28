@@ -42,9 +42,9 @@ def logout():
     return response
 
 
-@users_blueprint.route('/token/refresh')
+@users_blueprint.route('/refresh')
 @jwt_required(refresh=True)
-def refresh_users_token():
+def refresh():
     identity = get_jwt_identity()
     access = create_access_token(identity=identity)
 
