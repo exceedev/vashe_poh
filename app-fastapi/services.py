@@ -11,11 +11,13 @@ CONTENT_TYPES = ['image/jpeg', 'image/png', 'image/heic']
 async def save_image(file: UploadFile):
     if not os.path.exists('media/'):
         os.makedirs('media')
-    filename = f'media/{uuid4()}.jpeg'
+    filename = f'{uuid4()}.jpeg'
+    filepath = f'media/{filename}'
     if file.content_type in CONTENT_TYPES:
-        await write_image(filename, file)
+        await write_image(filepath, file)
     else:
         raise HTTPException(status_code=412, detail='Incorrect image type')
+    return filename
 
 
 async def write_image(filename: str, file: UploadFile):

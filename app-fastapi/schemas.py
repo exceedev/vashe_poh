@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from bson.objectid import ObjectId as BsonObjectId
 
 
-class PydanticObjectId(BsonObjectId):
+class PydanticObjectId(str):
     @classmethod
     def __get_validators__(cls):
         yield cls.validate
@@ -14,6 +14,11 @@ class PydanticObjectId(BsonObjectId):
         return str(v)
 
 
-class UploadImage(BaseModel):
+class GetImage(BaseModel):
+    def __init__(self, **data):
+        if '_id' in data.keys():
+            data['id'] = data.pop('_id')
+        super().__init__(**data)
+
     filename: str
-    object_id: PydanticObjectId
+    id: PydanticObjectId
