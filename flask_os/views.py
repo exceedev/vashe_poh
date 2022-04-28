@@ -1,6 +1,8 @@
 from flask import Blueprint, jsonify, request
-from flask_jwt_extended import jwt_required, get_jwt_identity, \
+from flask_jwt_extended import (
+    jwt_required, get_jwt_identity,
     create_refresh_token, unset_jwt_cookies
+)
 
 from .models import *
 
@@ -47,4 +49,3 @@ def refresh_users_token():
     access = create_access_token(identity=identity)
 
     return jsonify({'refresh_token': access})
-
