@@ -136,3 +136,5 @@ static/
 media/
 
 .DS_Store/
+
+*/.vscode/
