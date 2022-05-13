@@ -57,6 +57,7 @@ services:
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/
+      - ./app-fastapi:/app
     env_file:
       - .env
     depends_on:
@@ -69,7 +70,7 @@ services:
     working_dir: /app/app-fastapi
     command: celery -A tasks worker -l info
     volumes:
-      - .:/app
+      - ./app-fastapi:/app
     links:
       - rabbitmq
     depends_on:
