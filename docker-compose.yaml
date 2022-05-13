@@ -1,24 +1,55 @@
 version: '3.8'
 
 services:
+  postgresqldb:
+    image: postgres:13
+    container_name: db
+    profiles:
+      - flask
+    volumes:
+      - _postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ./flask_os/.env
+  flask_migrations:
+    container_name: migrations
+    build: ./flask_os/
+    profiles:
+      - migrations
+      - flask
+    volumes:
+      - ./flask_os/:/code/
+    env_file:
+      - ./flask_os/.env
+    command: alembic upgrade head     
+    depends_on:
+      - postgresqldb
+  flask:
+    build: ./flask_os
+    container_name: flask-app
+    command: flask run app.py
+    restart: always
+    profiles:
+      - flask
+    volumes:
+      - ./flask_os/:/code/
+    env_file:
+      - ./flask_os/.env
+    depends_on:
+      - postgresqldb
   mongodb:
     image: mongo:4.2.20-rc0
     container_name: mongo
     restart: always
     ports:
-      - '27017:27017'
-    networks:
-      - backend
+      - 27017:27017
   rabbitmq:
     image: rabbitmq:3.10.0-rc.1
     container_name: rabbitmq
     restart: always
     ports:
-      - '5672:5672'
+      - 5672:5672
     env_file:
       - .env
-    networks:
-      - backend
   fastapi-app:
     build: ./app-fastapi
     container_name: fastapi-app
@@ -31,8 +62,6 @@ services:
     depends_on:
       - mongodb
       - rabbitmq
-    networks:
-      - backend
   celery:
     build:
       context: ./app-fastapi
@@ -45,8 +74,6 @@ services:
       - rabbitmq
     depends_on:
       - fastapi-app
-    networks:
-      - backend
   flower:
     build: ./app-fastapi
     container_name: flower
@@ -55,32 +82,26 @@ services:
     volumes:
       - .:/app
     ports:
-      - '5555:5555'
+      - 5555:5555
     environment:
       CELERY_BROKER_URL: ${RABBIT_BROKER}
       CELERY_RESULT_BACKEND: ${RABBIT_BACKEND}
     depends_on:
       - celery
-    networks:
-      - backend
   nginx:
     image: nginx:1.21.3-alpine
     container_name: nginx
     ports:
-      - '80:80'
+      - 80:80
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
       - static_value:/var/html/static/
       - media_value:/var/html/media/
     depends_on:
       - fastapi-app
-    networks:
-      - backend
 
 volumes:
   static_value:
   media_value:
+  _postgres_data:
 
-networks:
-  backend:
-    driver: bridge
