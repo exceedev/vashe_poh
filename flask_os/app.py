@@ -10,7 +10,7 @@ from flask_jwt_extended import (
     create_refresh_token, unset_jwt_cookies, create_access_token
 )
 
-from .config import Config
+from config import Config
 
 
 users_blueprint = Blueprint('users', __name__)

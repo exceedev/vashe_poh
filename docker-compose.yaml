@@ -28,8 +28,8 @@ services:
   #     - postgresqldb
   flask:
     build: ./flask_os
-    container_name: flask-app
-    command: flask run --host=0.0.0.0 
+    container_name: flask-app 
+    command: gunicorn app:app --bind=0.0.0.0:5000 --timeout 120 --reload --log-level=debug
     restart: on-failure:2
     profiles:
       - flask
