@@ -49,25 +49,23 @@ services:
     ports:
       - 5672:5672
     env_file:
-      - .env
+      - app-fastapi/.env
   fastapi-app:
     build: ./app-fastapi
     container_name: fastapi-app
     restart: always
     volumes:
-      - static_value:/app/static/
-      - media_value:/app/media/
+      - static_value:/app/app-fastapi/static/
+      - media_value:/app/app-fastapi/media/
       - ./app-fastapi:/app
     env_file:
-      - .env
+      - app-fastapi/.env
     depends_on:
       - mongodb
       - rabbitmq
   celery:
-    build:
-      context: ./app-fastapi
+    build: ./app-fastapi
     container_name: celery
-    working_dir: /app/app-fastapi
     command: celery -A tasks worker -l info
     volumes:
       - ./app-fastapi:/app
@@ -78,15 +76,13 @@ services:
   flower:
     build: ./app-fastapi
     container_name: flower
-    working_dir: /app/app-fastapi
     command: celery flower
     volumes:
-      - .:/app
+      - ./app-fastapi:/app
     ports:
       - 5555:5555
-    environment:
-      CELERY_BROKER_URL: ${RABBIT_BROKER}
-      CELERY_RESULT_BACKEND: ${RABBIT_BACKEND}
+    env_file:
+      - app-fastapi/.env
     depends_on:
       - celery
   nginx:
