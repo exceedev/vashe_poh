@@ -1,11 +1,10 @@
 from bson import ObjectId
-from fastapi import APIRouter, UploadFile, File, status, HTTPException
+from fastapi import APIRouter, File, HTTPException, UploadFile, status
 from fastapi.responses import Response
 
 from db import collection
-from services import save_image
 from schemas import GetImage
-
+from services import save_image
 
 image_router = APIRouter(
     prefix='/images'
@@ -41,8 +40,7 @@ async def put_image(image_id: str, file: UploadFile = File(...)):
     file_save = await save_image(file)
     update_value = {'$set': {'filename': file_save}}
     await collection.update_one(find_image, update_value)
-    document = {'filename': file_save, 'id': ObjectId(image_id)}
-    return document
+    return {'filename': file_save, 'id': ObjectId(image_id)}
 
 
 @image_router.delete('/{image_id}/', status_code=204)
