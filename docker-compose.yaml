@@ -40,36 +40,37 @@ services:
     image: mongo:4.2.20-rc0
     container_name: mongo
     restart: always
+    volumes:
+      - _mongodb_data:/var/lib/mongodb/data
     ports:
       - 27017:27017
   rabbitmq:
     image: rabbitmq:3.10.0-rc.1
     container_name: rabbitmq
     restart: always
+    volumes:
+      - _rabbitmq_data:/var/lib/rabbitmq
     ports:
       - 5672:5672
     env_file:
-      - .env
+      - app-fastapi/.env
   fastapi-app:
     build: ./app-fastapi
     container_name: fastapi-app
     restart: always
     volumes:
-      - static_value:/app/static/
-      - media_value:/app/media/
+      - ./app-fastapi:/app
     env_file:
-      - .env
+      - app-fastapi/.env
     depends_on:
       - mongodb
       - rabbitmq
   celery:
-    build:
-      context: ./app-fastapi
+    build: ./app-fastapi
     container_name: celery
-    working_dir: /app/app-fastapi
     command: celery -A tasks worker -l info
     volumes:
-      - .:/app
+      - ./app-fastapi:/app
     links:
       - rabbitmq
     depends_on:
@@ -77,15 +78,13 @@ services:
   flower:
     build: ./app-fastapi
     container_name: flower
-    working_dir: /app/app-fastapi
     command: celery flower
     volumes:
-      - .:/app
+      - ./app-fastapi:/app
     ports:
       - 5555:5555
-    environment:
-      CELERY_BROKER_URL: ${RABBIT_BROKER}
-      CELERY_RESULT_BACKEND: ${RABBIT_BACKEND}
+    env_file:
+      - app-fastapi/.env
     depends_on:
       - celery
   nginx:
@@ -95,13 +94,11 @@ services:
       - 80:80
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
-      - static_value:/var/html/static/
-      - media_value:/var/html/media/
     depends_on:
       - fastapi-app
 
 volumes:
-  static_value:
-  media_value:
+  _rabbitmq_data:
+  _mongodb_data:
   _postgres_data:
 
