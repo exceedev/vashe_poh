@@ -16,7 +16,7 @@ async def save_image(file: UploadFile):
     filepath = f'media/{filename}'
     if file.content_type in CONTENT_TYPES:
         await write_image(filepath, file)
-        resize_image.delay(filepath, filename)
+        resize_image.delay(filepath)
     else:
         raise HTTPException(status_code=412, detail='Incorrect image type')
     return filename

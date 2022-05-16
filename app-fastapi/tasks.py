@@ -4,8 +4,8 @@ from celery_settings import app
 
 
 @app.task
-def resize_image(filepath: str, filename: str):
+def resize_image(filepath: str):
     image = Image.open(filepath)
     output = image.resize((600, 400))
     output.save(filepath)
-    return f'Resize image: {filename} succeeded'
+    return filepath
