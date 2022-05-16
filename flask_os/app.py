@@ -4,13 +4,16 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from passlib.hash import bcrypt
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, Response
 from flask_jwt_extended import (
     JWTManager, jwt_required, get_jwt_identity,
     create_refresh_token, unset_jwt_cookies, create_access_token
 )
 
-from config import Config
+try:
+    from config import Config
+except ImportError:
+    from .config import Config
 
 
 users_blueprint = Blueprint('users', __name__)
@@ -54,21 +57,17 @@ class User(db.Model):
 @users_blueprint.route('/test/<int:count>', methods=['GET', 'POST'])
 @jwt_required()
 def test(count):
-    return jsonify({'count': count})
+    return Response(status=201)
 
 
 @users_blueprint.route('/register', methods=['POST'])
 def register():
-    try:
-        params = request.json
-        user = User(**params)
-        db.session.add(user)
-        db.session.commit()
-        token = user.get_token()
-        return {'access_token': token}
-    except:
-        db.session.rollback()
-        print('Error of create user')
+    params = request.json
+    user = User(**params)
+    db.session.add(user)
+    db.session.commit()
+    token = user.get_token()
+    return {'access_token': token}
 
 
 @users_blueprint.route('/login', methods=['POST'])
