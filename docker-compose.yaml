@@ -13,23 +13,10 @@ services:
       - ./flask_os/.env
     ports:
       - 5430:5432
-  # flask_migrations:
-  #   container_name: migrations
-  #   build: ./flask_os/
-  #   profiles:
-  #     - migrations
-  #     - flask
-  #   volumes:
-  #     - ./flask_os/:/code/
-  #   env_file:
-  #     - ./flask_os/.env
-  #   command: alembic upgrade head
-  #   depends_on:
-  #     - postgresqldb
   flask:
     build: ./flask_os
     container_name: flask-app 
-    command: gunicorn app:app --bind=0.0.0.0:5000 --timeout 120 --reload --log-level=debug
+    command: gunicorn app:app --bind=0.0.0.0:5000 --reload --log-level=debug
     restart: on-failure:2
     profiles:
       - flask
