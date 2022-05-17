@@ -1,27 +1,24 @@
-from flask import Blueprint, jsonify, request
 from flask_jwt_extended import (
-    jwt_required, get_jwt_identity,
-    create_refresh_token, unset_jwt_cookies
-)
+    jwt_required, get_jwt_identity, create_refresh_token,
+    unset_jwt_cookies, create_access_token)
+from flask import jsonify, request, Response
 
-from .models import *
-
-
-users_blueprint = Blueprint('users', __name__)
+from app import users_blueprint, app, db
+from models import User
 
 
 @users_blueprint.route('/test/<int:count>', methods=['GET', 'POST'])
 @jwt_required()
 def test(count):
-    return jsonify({'count': count})
+    return Response(status=201)
 
 
 @users_blueprint.route('/register', methods=['POST'])
 def register():
     params = request.json
     user = User(**params)
-    session.add(user)
-    session.commit()
+    db.session.add(user)
+    db.session.commit()
     token = user.get_token()
     return {'access_token': token}
 
@@ -49,3 +46,6 @@ def refresh():
     access = create_access_token(identity=identity)
 
     return jsonify({'refresh_token': access})
+
+
+app.register_blueprint(users_blueprint)

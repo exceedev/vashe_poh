@@ -1,13 +1,14 @@
 import os
 
-from pymongo import MongoClient
+from dotenv import load_dotenv
+from motor.motor_asyncio import AsyncIOMotorClient
+
+load_dotenv('../.env')
 
 MONGO_HOST = os.getenv('MONGO_HOST')
+MONGO_PORT = os.getenv('MONGO_PORT')
 
-connect = MongoClient(
-    host=MONGO_HOST,
-    port=27017,
-    unicode_decode_error_handler='ignore'
-)
 
-image_db = connect['image-database']
+cluster = AsyncIOMotorClient(f'mongodb://{MONGO_HOST}:{MONGO_PORT}')
+database = cluster.image_db
+collection = database.images
